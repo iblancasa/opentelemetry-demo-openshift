@@ -1,0 +1,7 @@
+apiVersion: v2
+name: openshift-distributed-tracing-demo-infra
+description: Helm Chart to install the Distributed Tracing infrastructure in OpenShift
+type: application
+
+version: 0.1.0
+appVersion: "0.1.0"
