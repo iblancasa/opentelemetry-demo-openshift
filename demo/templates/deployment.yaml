@@ -608,9 +608,9 @@ spec:
             limits:
               memory: 500Mi
           securityContext:
-            runAsGroup: 1000
+            runAsGroup: 101
             runAsNonRoot: true
-            runAsUser: 1000
+            runAsUser: 101
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -676,6 +676,7 @@ kind: Deployment
 metadata:
   name: opentelemetry-demo-loadgenerator
   labels:
+    
     opentelemetry.io/name: opentelemetry-demo-loadgenerator
     app.kubernetes.io/instance: opentelemetry-demo
     app.kubernetes.io/component: loadgenerator
@@ -700,6 +701,7 @@ spec:
           image: 'ghcr.io/open-telemetry/demo:{{ .Chart.AppVersion }}-loadgenerator'
           imagePullPolicy: IfNotPresent
           ports:
+          
           - containerPort: 8089
             name: service
           env:
@@ -709,7 +711,7 @@ spec:
                 apiVersion: v1
                 fieldPath: metadata.labels['app.kubernetes.io/component']
           - name: OTEL_COLLECTOR_NAME
-            value: 'opentelemetry-demo-collector'
+            value: 'opentelemetry-demo-otelcol'
           - name: OTEL_EXPORTER_OTLP_METRICS_TEMPORALITY_PREFERENCE
             value: cumulative
           - name: LOCUST_WEB_PORT
@@ -735,10 +737,8 @@ spec:
           resources:
             limits:
               memory: 1Gi
-          securityContext:
-            runAsGroup: 1000
-            runAsNonRoot: true
-            runAsUser: 1000
+          volumeMounts:
+      volumes:
 ---
 apiVersion: apps/v1
 kind: Deployment
