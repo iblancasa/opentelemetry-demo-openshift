@@ -1,0 +1,23 @@
+apiVersion: opentelemetry.io/v1alpha1
+kind: OpenTelemetryCollector
+metadata:
+  name: opentelemetry-demo
+spec:
+  config: |
+    exporters:
+      debug:
+    processors:
+    receivers:
+      otlp:
+        protocols:
+          grpc:
+          http:
+    service:
+      pipelines:
+        traces:
+          exporters:
+          - debug
+          processors:
+          receivers:
+          - otlp
+

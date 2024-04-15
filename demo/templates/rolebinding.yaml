@@ -1,0 +1,12 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ .Release.Namespace }}:label-ns
+subjects:
+  - kind: ServiceAccount
+    name: annotatejob
+    namespace: {{ .Release.Namespace }}
+roleRef:
+  kind: Role
+  name: label-ns
+  apiGroup: rbac.authorization.k8s.io

@@ -1,0 +1,28 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: annotate-ns
+spec:
+  template:
+    spec:
+      restartPolicy: Never
+      serviceAccountName: annotatejob
+      containers:
+      - name: uid-annotation-ns
+        image: "bitnami/kubectl:latest"
+        command:
+          - kubectl
+          - annotate
+          - ns
+          - {{ .Release.Namespace }}
+          - openshift.io/sa.scc.uid-range=1000/1000
+          - --overwrite
+      - name: groups-annotation-ns
+        image: "bitnami/kubectl:latest"
+        command:
+          - kubectl
+          - annotate
+          - ns
+          - {{ .Release.Namespace }}
+          - openshift.io/sa.scc.supplemental-groups=3000/3000
+          - --overwrite
