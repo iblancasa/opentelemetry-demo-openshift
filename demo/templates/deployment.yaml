@@ -119,8 +119,6 @@ spec:
             value: cumulative
           - name: AD_SERVICE_PORT
             value: "8080"
-          - name: FEATURE_FLAG_GRPC_SERVICE_ADDR
-            value: 'opentelemetry-demo-featureflagservice:50053'
           - name: OTEL_EXPORTER_OTLP_ENDPOINT
             value: http://$(OTEL_COLLECTOR_NAME):4318
           - name: OTEL_LOGS_EXPORTER
@@ -189,8 +187,6 @@ spec:
             value: "8080"
           - name: ASPNETCORE_URLS
             value: http://*:$(CART_SERVICE_PORT)
-          - name: FEATURE_FLAG_GRPC_SERVICE_ADDR
-            value: 'opentelemetry-demo-featureflagservice:50053'
           - name: REDIS_ADDR
             value: 'opentelemetry-demo-redis:6379'
           - name: OTEL_EXPORTER_OTLP_ENDPOINT
@@ -940,8 +936,6 @@ spec:
             value: cumulative
           - name: PRODUCT_CATALOG_SERVICE_PORT
             value: "8080"
-          - name: FEATURE_FLAG_GRPC_SERVICE_ADDR
-            value: 'opentelemetry-demo-featureflagservice:50053'
           - name: OTEL_EXPORTER_OTLP_ENDPOINT
             value: http://$(OTEL_COLLECTOR_NAME):4317
           - name: OTEL_RESOURCE_ATTRIBUTES
@@ -1070,8 +1064,6 @@ spec:
             value: "8080"
           - name: PRODUCT_CATALOG_SERVICE_ADDR
             value: 'opentelemetry-demo-productcatalogservice:8080'
-          - name: FEATURE_FLAG_GRPC_SERVICE_ADDR
-            value: 'opentelemetry-demo-featureflagservice:50053'
           - name: OTEL_PYTHON_LOG_CORRELATION
             value: "true"
           - name: PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION
@@ -1080,6 +1072,8 @@ spec:
             value: http://$(OTEL_COLLECTOR_NAME):4317
           - name: OTEL_RESOURCE_ATTRIBUTES
             value: service.name=$(OTEL_SERVICE_NAME),service.namespace=opentelemetry-demo
+          - name: FLAGD_HOST
+            value: "0.0.0.0"
           resources:
             limits:
               memory: 500Mi

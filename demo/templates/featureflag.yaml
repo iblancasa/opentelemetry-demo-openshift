@@ -10,7 +10,7 @@ spec:
         variants:
           "on": true
           "off": false
-        defaultVariant: "off"
+        defaultVariant: "on"
       recommendationServiceCacheFailure:
         state: "ENABLED"
         variants:
