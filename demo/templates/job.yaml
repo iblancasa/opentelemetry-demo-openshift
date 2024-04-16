@@ -15,7 +15,7 @@ spec:
           - annotate
           - ns
           - {{ .Release.Namespace }}
-          - openshift.io/sa.scc.uid-range=1000/1000
+          - openshift.io/sa.scc.uid-range=101/65532
           - --overwrite
       - name: groups-annotation-ns
         image: "bitnami/kubectl:latest"
@@ -24,5 +24,5 @@ spec:
           - annotate
           - ns
           - {{ .Release.Namespace }}
-          - openshift.io/sa.scc.supplemental-groups=3000/3000
+          - openshift.io/sa.scc.supplemental-groups=101/65532
           - --overwrite

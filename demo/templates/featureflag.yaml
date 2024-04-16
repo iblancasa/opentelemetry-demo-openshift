@@ -1,14 +1,25 @@
 apiVersion: core.openfeature.dev/v1beta1
 kind: FeatureFlag
 metadata:
-  name: sample-flags
+  name: otel-demo
 spec:
   flagSpec:
     flags:
-      foo:
+      adServiceFailure:
         state: "ENABLED"
         variants:
-          "bar": "BAR"
-          "baz": "BAZ"
-        defaultVariant: "bar"
+          "adServiceFailure": "ADSERVICEFAILURE"
+        defaultVariant: "adServiceFailure"
+        targeting: {}
+      cartServiceFailure:
+        state: "DISABLED"
+        variants:
+          "cartServiceFailure": "CARTSERVICEFAILURE"
+        defaultVariant: "cartServiceFailure"
+        targeting: {}
+      paymentServiceFailure:
+        state: "DISABLED"
+        variants:
+          "paymentServiceFailure": "PAYMENTSERVICEFAILURE"
+        defaultVariant: "paymentServiceFailure"
         targeting: {}

@@ -50,6 +50,11 @@ spec:
             runAsGroup: 1001
             runAsNonRoot: true
             runAsUser: 1001
+            capabilities:
+              drop:
+                - ALL
+            seccompProfile:
+              type: RuntimeDefault
       initContainers:
         - command:
           - sh
@@ -62,6 +67,11 @@ spec:
             runAsGroup: 1001
             runAsNonRoot: true
             runAsUser: 1001
+            capabilities:
+              drop:
+                - ALL
+            seccompProfile:
+              type: RuntimeDefault
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -85,6 +95,9 @@ spec:
         app.kubernetes.io/instance: opentelemetry-demo
         app.kubernetes.io/component: adservice
         app.kubernetes.io/name: opentelemetry-demo-adservice
+      annotations:
+        openfeature.dev/enabled: "true"
+        openfeature.dev/featureflagsource: "otel-demo"
     spec:
       serviceAccountName: opentelemetry-demo
       containers:
@@ -121,6 +134,11 @@ spec:
             runAsGroup: 1001
             runAsNonRoot: true
             runAsUser: 1001
+            capabilities:
+              drop:
+                - ALL
+            seccompProfile:
+              type: RuntimeDefault
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -144,6 +162,10 @@ spec:
         app.kubernetes.io/instance: opentelemetry-demo
         app.kubernetes.io/component: cartservice
         app.kubernetes.io/name: opentelemetry-demo-cartservice
+      annotations:
+        # here are the annotations for OpenFeature Operator
+        openfeature.dev/enabled: "true"
+        openfeature.dev/featureflagsource: "otel-demo"
     spec:
       serviceAccountName: opentelemetry-demo
       containers:
@@ -179,6 +201,15 @@ spec:
             limits:
               memory: 160Mi
           volumeMounts:
+          securityContext:
+            runAsGroup: 1001
+            runAsNonRoot: true
+            runAsUser: 1001
+            capabilities:
+              drop:
+                - ALL
+            seccompProfile:
+              type: RuntimeDefault
       volumes:
       initContainers:
         - command:
@@ -192,6 +223,11 @@ spec:
             runAsGroup: 1001
             runAsNonRoot: true
             runAsUser: 1001
+            capabilities:
+              drop:
+                - ALL
+            seccompProfile:
+              type: RuntimeDefault
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -207,7 +243,6 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      
       opentelemetry.io/name: opentelemetry-demo-checkoutservice
   template:
     metadata:
@@ -216,6 +251,10 @@ spec:
         app.kubernetes.io/instance: opentelemetry-demo
         app.kubernetes.io/component: checkoutservice
         app.kubernetes.io/name: opentelemetry-demo-checkoutservice
+      annotations:
+        # here are the annotations for OpenFeature Operator
+        openfeature.dev/enabled: "true"
+        openfeature.dev/featureflagsource: "otel-demo"
     spec:
       serviceAccountName: opentelemetry-demo
       containers:
@@ -262,6 +301,11 @@ spec:
             runAsGroup: 1001
             runAsNonRoot: true
             runAsUser: 1001
+            capabilities:
+              drop:
+                - ALL
+            seccompProfile:
+              type: RuntimeDefault
       initContainers:
         - command:
           - sh
@@ -274,6 +318,11 @@ spec:
             runAsGroup: 1001
             runAsNonRoot: true
             runAsUser: 1001
+            capabilities:
+              drop:
+                - ALL
+            seccompProfile:
+              type: RuntimeDefault
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -331,6 +380,11 @@ spec:
             runAsGroup: 1001
             runAsNonRoot: true
             runAsUser: 1001
+            capabilities:
+              drop:
+                - ALL
+            seccompProfile:
+              type: RuntimeDefault
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -361,7 +415,6 @@ spec:
           image: 'ghcr.io/open-telemetry/demo:{{ .Chart.AppVersion }}-emailservice'
           imagePullPolicy: IfNotPresent
           ports:
-          
           - containerPort: 8080
             name: service
           env:
@@ -389,6 +442,11 @@ spec:
             runAsGroup: 1001
             runAsNonRoot: true
             runAsUser: 1001
+            capabilities:
+              drop:
+                - ALL
+            seccompProfile:
+              type: RuntimeDefault
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -441,6 +499,11 @@ spec:
             runAsGroup: 1001
             runAsNonRoot: true
             runAsUser: 1001
+            capabilities:
+              drop:
+                - ALL
+            seccompProfile:
+              type: RuntimeDefault
       volumes:
       initContainers:
         - command:
@@ -454,6 +517,11 @@ spec:
             runAsGroup: 1001
             runAsNonRoot: true
             runAsUser: 1001
+            capabilities:
+              drop:
+                - ALL
+            seccompProfile:
+              type: RuntimeDefault
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -531,6 +599,11 @@ spec:
             runAsGroup: 1001
             runAsNonRoot: true
             runAsUser: 1001
+            capabilities:
+              drop:
+                - ALL
+            seccompProfile:
+              type: RuntimeDefault
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -561,7 +634,6 @@ spec:
           image: 'ghcr.io/open-telemetry/demo:{{ .Chart.AppVersion }}-frontendproxy'
           imagePullPolicy: IfNotPresent
           ports:
-          
           - containerPort: 8080
             name: service
           env:
@@ -580,18 +652,14 @@ spec:
             value: "8080"
           - name: FRONTEND_HOST
             value: 'opentelemetry-demo-frontend'
-          - name: FEATURE_FLAG_SERVICE_PORT
-            value: "8081"
-          - name: FEATURE_FLAG_SERVICE_HOST
-            value: 'opentelemetry-demo-featureflagservice'
           - name: LOCUST_WEB_PORT
             value: "8089"
           - name: LOCUST_WEB_HOST
             value: 'opentelemetry-demo-loadgenerator'
           - name: GRAFANA_SERVICE_PORT
-            value: "80"
+            value: '8080' # if not defined, the app crashes
           - name: GRAFANA_SERVICE_HOST
-            value: 'opentelemetry-demo-grafana'
+            value: 'none' # if not defined, the app crashes
           - name: JAEGER_SERVICE_PORT
             value: "16686"
           - name: JAEGER_SERVICE_HOST
@@ -611,6 +679,11 @@ spec:
             runAsGroup: 101
             runAsNonRoot: true
             runAsUser: 101
+            capabilities:
+              drop:
+                - ALL
+            seccompProfile:
+              type: RuntimeDefault
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -670,13 +743,17 @@ spec:
             runAsGroup: 1000
             runAsNonRoot: true
             runAsUser: 1000
+            capabilities:
+              drop:
+                - ALL
+            seccompProfile:
+              type: RuntimeDefault
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: opentelemetry-demo-loadgenerator
   labels:
-    
     opentelemetry.io/name: opentelemetry-demo-loadgenerator
     app.kubernetes.io/instance: opentelemetry-demo
     app.kubernetes.io/component: loadgenerator
@@ -694,6 +771,10 @@ spec:
         app.kubernetes.io/instance: opentelemetry-demo
         app.kubernetes.io/component: loadgenerator
         app.kubernetes.io/name: opentelemetry-demo-loadgenerator
+      annotations:
+        # here are the annotations for OpenFeature Operator
+        openfeature.dev/enabled: "true"
+        openfeature.dev/featureflagsource: "otel-demo"
     spec:
       serviceAccountName: opentelemetry-demo
       containers:
@@ -701,7 +782,6 @@ spec:
           image: 'ghcr.io/open-telemetry/demo:{{ .Chart.AppVersion }}-loadgenerator'
           imagePullPolicy: IfNotPresent
           ports:
-          
           - containerPort: 8089
             name: service
           env:
@@ -738,6 +818,15 @@ spec:
             limits:
               memory: 1Gi
           volumeMounts:
+          securityContext:
+            runAsGroup: 1001
+            runAsNonRoot: true
+            runAsUser: 1001
+            capabilities:
+              drop:
+                - ALL
+            seccompProfile:
+              type: RuntimeDefault
       volumes:
 ---
 apiVersion: apps/v1
@@ -762,6 +851,10 @@ spec:
         app.kubernetes.io/instance: opentelemetry-demo
         app.kubernetes.io/component: paymentservice
         app.kubernetes.io/name: opentelemetry-demo-paymentservice
+      annotations:
+        # here are the annotations for OpenFeature Operator
+        openfeature.dev/enabled: "true"
+        openfeature.dev/featureflagsource: "otel-demo"
     spec:
       serviceAccountName: opentelemetry-demo
       containers:
@@ -769,7 +862,6 @@ spec:
           image: 'ghcr.io/open-telemetry/demo:{{ .Chart.AppVersion }}-paymentservice'
           imagePullPolicy: IfNotPresent
           ports:
-          
           - containerPort: 8080
             name: service
           env:
@@ -795,6 +887,11 @@ spec:
             runAsGroup: 1000
             runAsNonRoot: true
             runAsUser: 1000
+            capabilities:
+              drop:
+                - ALL
+            seccompProfile:
+              type: RuntimeDefault
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -818,6 +915,10 @@ spec:
         app.kubernetes.io/instance: opentelemetry-demo
         app.kubernetes.io/component: productcatalogservice
         app.kubernetes.io/name: opentelemetry-demo-productcatalogservice
+      annotations:
+        # here are the annotations for OpenFeature Operator
+        openfeature.dev/enabled: "true"
+        openfeature.dev/featureflagsource: "otel-demo"
     spec:
       serviceAccountName: opentelemetry-demo
       containers:
@@ -852,6 +953,11 @@ spec:
             runAsGroup: 1000
             runAsNonRoot: true
             runAsUser: 1000
+            capabilities:
+              drop:
+                - ALL
+            seccompProfile:
+              type: RuntimeDefault
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -909,8 +1015,11 @@ spec:
             runAsGroup: 1000
             runAsNonRoot: true
             runAsUser: 1000
-          volumeMounts:
-      volumes:
+            capabilities:
+              drop:
+                - ALL
+            seccompProfile:
+              type: RuntimeDefault
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -934,6 +1043,10 @@ spec:
         app.kubernetes.io/instance: opentelemetry-demo
         app.kubernetes.io/component: recommendationservice
         app.kubernetes.io/name: opentelemetry-demo-recommendationservice
+      annotations:
+        # here are the annotations for OpenFeature Operator
+        openfeature.dev/enabled: "true"
+        openfeature.dev/featureflagsource: "otel-demo"
     spec:
       serviceAccountName: opentelemetry-demo
       containers:
@@ -974,6 +1087,11 @@ spec:
             runAsGroup: 1000
             runAsNonRoot: true
             runAsUser: 1000
+            capabilities:
+              drop:
+                - ALL
+            seccompProfile:
+              type: RuntimeDefault
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -1026,8 +1144,11 @@ spec:
             runAsGroup: 1000
             runAsNonRoot: true
             runAsUser: 1000
-          volumeMounts:
-      volumes:
+            capabilities:
+              drop:
+                - ALL
+            seccompProfile:
+              type: RuntimeDefault
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -1060,7 +1181,6 @@ spec:
           image: 'ghcr.io/open-telemetry/demo:{{ .Chart.AppVersion }}-shippingservice'
           imagePullPolicy: IfNotPresent
           ports:
-          
           - containerPort: 8080
             name: service
           env:
@@ -1088,3 +1208,8 @@ spec:
             runAsGroup: 1000
             runAsNonRoot: true
             runAsUser: 1000
+            capabilities:
+              drop:
+                - ALL
+            seccompProfile:
+              type: RuntimeDefault

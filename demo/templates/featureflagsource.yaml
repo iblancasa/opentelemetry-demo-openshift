@@ -1,0 +1,9 @@
+apiVersion: core.openfeature.dev/v1beta1
+kind: FeatureFlagSource
+metadata:
+  name: otel-demo
+spec:
+  sources:
+  - source: otel-demo
+    provider: kubernetes
+  port: 8081
