@@ -25,3 +25,15 @@ spec:
           processors:
           receivers:
           - otlp
+        metrics:
+          exporters:
+          - debug
+          processors:
+          receivers:
+          - otlp
+        logs:
+          exporters:
+          - debug
+          processors:
+          receivers:
+          - otlp

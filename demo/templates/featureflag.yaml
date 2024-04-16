@@ -5,21 +5,72 @@ metadata:
 spec:
   flagSpec:
     flags:
+      productCatalogFailure:
+        state: "ENABLED"
+        variants:
+          "on": true
+          "off": false
+        defaultVariant: "off"
+      recommendationServiceCacheFailure:
+        state: "ENABLED"
+        variants:
+          "on": true
+          "off": false
+        defaultVariant: "off"
+      adServiceManualGc:
+        state: "ENABLED"
+        variants:
+          "on": true
+          "off": false
+        defaultVariant: "off"
+      adServiceHighCpu:
+        state: "ENABLED"
+        variants:
+          "on": true
+          "off": false
+        defaultVariant: "off"
       adServiceFailure:
         state: "ENABLED"
         variants:
-          "adServiceFailure": "ADSERVICEFAILURE"
-        defaultVariant: "adServiceFailure"
-        targeting: {}
+          "on": true
+          "off": false
+        defaultVariant: "off"
+        targeting: {
+          "fractional": [
+            {
+              "var": "session"
+            },
+            [
+              "on",
+              10
+            ],
+            [
+              "off",
+              90
+            ]
+          ]
+        }
       cartServiceFailure:
-        state: "DISABLED"
+        state: "ENABLED"
         variants:
-          "cartServiceFailure": "CARTSERVICEFAILURE"
-        defaultVariant: "cartServiceFailure"
-        targeting: {}
+          "on": true
+          "off": false
+        defaultVariant: "off"
       paymentServiceFailure:
-        state: "DISABLED"
+        state: "ENABLED"
         variants:
-          "paymentServiceFailure": "PAYMENTSERVICEFAILURE"
-        defaultVariant: "paymentServiceFailure"
-        targeting: {}
+          "on": true
+          "off": false
+        defaultVariant: "off"
+      paymentServiceUnreachable:
+        state: "ENABLED"
+        variants:
+          "on": true
+          "off": false
+        defaultVariant: "off"
+      loadgeneratorFloodHomepage:
+        state: "ENABLED"
+        variants:
+          "on": true
+          "off": false
+        defaultVariant: "off"

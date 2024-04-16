@@ -6,4 +6,3 @@ spec:
   sources:
   - source: otel-demo
     provider: kubernetes
-  port: 8081
