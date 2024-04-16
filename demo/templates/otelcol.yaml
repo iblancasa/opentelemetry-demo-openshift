@@ -6,6 +6,10 @@ spec:
   config: |
     exporters:
       debug:
+      otlp:
+        endpoint: tempo-simplest-distributor:4317
+        tls:
+          insecure: true
     processors:
     receivers:
       otlp:
@@ -16,8 +20,8 @@ spec:
       pipelines:
         traces:
           exporters:
+          - otlp
           - debug
           processors:
           receivers:
           - otlp
-
