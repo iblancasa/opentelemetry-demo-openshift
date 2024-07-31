@@ -1,39 +1,38 @@
-apiVersion: opentelemetry.io/v1alpha1
+apiVersion: opentelemetry.io/v1beta1
 kind: OpenTelemetryCollector
 metadata:
   name: opentelemetry-demo
 spec:
-  config: |
+  config:
     exporters:
-      debug:
       otlp:
         endpoint: tempo-simplest-distributor:4317
         tls:
           insecure: true
-    processors:
+      logging: {}
     receivers:
       otlp:
         protocols:
-          grpc:
-          http:
+          grpc: {}
+          http: {}
     service:
       pipelines:
         traces:
           exporters:
           - otlp
-          - debug
-          processors:
+          - logging
+          processors: []
           receivers:
           - otlp
         metrics:
           exporters:
-          - debug
-          processors:
+          - logging
+          processors: []
           receivers:
           - otlp
         logs:
           exporters:
-          - debug
-          processors:
+          - logging
+          processors: []
           receivers:
           - otlp

@@ -50,6 +50,7 @@ spec:
             runAsGroup: 1001
             runAsNonRoot: true
             runAsUser: 1001
+            allowPrivilegeEscalation: false
             capabilities:
               drop:
                 - ALL
@@ -67,6 +68,7 @@ spec:
             runAsGroup: 1001
             runAsNonRoot: true
             runAsUser: 1001
+            allowPrivilegeEscalation: false
             capabilities:
               drop:
                 - ALL
@@ -132,6 +134,7 @@ spec:
             runAsGroup: 1001
             runAsNonRoot: true
             runAsUser: 1001
+            allowPrivilegeEscalation: false
             capabilities:
               drop:
                 - ALL
@@ -201,6 +204,7 @@ spec:
             runAsGroup: 1001
             runAsNonRoot: true
             runAsUser: 1001
+            allowPrivilegeEscalation: false
             capabilities:
               drop:
                 - ALL
@@ -219,6 +223,7 @@ spec:
             runAsGroup: 1001
             runAsNonRoot: true
             runAsUser: 1001
+            allowPrivilegeEscalation: false
             capabilities:
               drop:
                 - ALL
@@ -297,6 +302,7 @@ spec:
             runAsGroup: 1001
             runAsNonRoot: true
             runAsUser: 1001
+            allowPrivilegeEscalation: false
             capabilities:
               drop:
                 - ALL
@@ -314,6 +320,7 @@ spec:
             runAsGroup: 1001
             runAsNonRoot: true
             runAsUser: 1001
+            allowPrivilegeEscalation: false
             capabilities:
               drop:
                 - ALL
@@ -376,6 +383,7 @@ spec:
             runAsGroup: 1001
             runAsNonRoot: true
             runAsUser: 1001
+            allowPrivilegeEscalation: false
             capabilities:
               drop:
                 - ALL
@@ -438,6 +446,7 @@ spec:
             runAsGroup: 1001
             runAsNonRoot: true
             runAsUser: 1001
+            allowPrivilegeEscalation: false
             capabilities:
               drop:
                 - ALL
@@ -494,7 +503,8 @@ spec:
           securityContext:
             runAsGroup: 1001
             runAsNonRoot: true
-            runAsUser: 1001
+            
+            allowPrivilegeEscalation: false
             capabilities:
               drop:
                 - ALL
@@ -513,6 +523,7 @@ spec:
             runAsGroup: 1001
             runAsNonRoot: true
             runAsUser: 1001
+            allowPrivilegeEscalation: false
             capabilities:
               drop:
                 - ALL
@@ -595,6 +606,7 @@ spec:
             runAsGroup: 1001
             runAsNonRoot: true
             runAsUser: 1001
+            allowPrivilegeEscalation: false
             capabilities:
               drop:
                 - ALL
@@ -675,6 +687,7 @@ spec:
             runAsGroup: 101
             runAsNonRoot: true
             runAsUser: 101
+            allowPrivilegeEscalation: false
             capabilities:
               drop:
                 - ALL
@@ -739,6 +752,7 @@ spec:
             runAsGroup: 1000
             runAsNonRoot: true
             runAsUser: 1000
+            allowPrivilegeEscalation: false
             capabilities:
               drop:
                 - ALL
@@ -818,6 +832,7 @@ spec:
             runAsGroup: 1001
             runAsNonRoot: true
             runAsUser: 1001
+            allowPrivilegeEscalation: false
             capabilities:
               drop:
                 - ALL
@@ -883,6 +898,7 @@ spec:
             runAsGroup: 1000
             runAsNonRoot: true
             runAsUser: 1000
+            allowPrivilegeEscalation: false
             capabilities:
               drop:
                 - ALL
@@ -947,6 +963,7 @@ spec:
             runAsGroup: 1000
             runAsNonRoot: true
             runAsUser: 1000
+            allowPrivilegeEscalation: false
             capabilities:
               drop:
                 - ALL
@@ -1009,6 +1026,7 @@ spec:
             runAsGroup: 1000
             runAsNonRoot: true
             runAsUser: 1000
+            allowPrivilegeEscalation: false
             capabilities:
               drop:
                 - ALL
@@ -1081,6 +1099,7 @@ spec:
             runAsGroup: 1000
             runAsNonRoot: true
             runAsUser: 1000
+            allowPrivilegeEscalation: false
             capabilities:
               drop:
                 - ALL
@@ -1138,6 +1157,7 @@ spec:
             runAsGroup: 1000
             runAsNonRoot: true
             runAsUser: 1000
+            allowPrivilegeEscalation: false
             capabilities:
               drop:
                 - ALL
@@ -1202,6 +1222,7 @@ spec:
             runAsGroup: 1000
             runAsNonRoot: true
             runAsUser: 1000
+            allowPrivilegeEscalation: false
             capabilities:
               drop:
                 - ALL
