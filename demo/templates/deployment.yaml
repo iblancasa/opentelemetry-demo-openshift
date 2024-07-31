@@ -475,6 +475,9 @@ spec:
         app.kubernetes.io/instance: opentelemetry-demo
         app.kubernetes.io/component: frauddetectionservice
         app.kubernetes.io/name: opentelemetry-demo-frauddetectionservice
+      annotations:
+        openfeature.dev/enabled: "true"
+        openfeature.dev/featureflagsource: "otel-demo"
     spec:
       serviceAccountName: opentelemetry-demo
       containers:
@@ -552,6 +555,10 @@ spec:
         app.kubernetes.io/instance: opentelemetry-demo
         app.kubernetes.io/component: frontend
         app.kubernetes.io/name: opentelemetry-demo-frontend
+      annotations:
+        # here are the annotations for OpenFeature Operator
+        openfeature.dev/enabled: "true"
+        openfeature.dev/featureflagsource: "otel-demo"
     spec:
       serviceAccountName: opentelemetry-demo
       containers:
@@ -635,6 +642,10 @@ spec:
         app.kubernetes.io/instance: opentelemetry-demo
         app.kubernetes.io/component: frontendproxy
         app.kubernetes.io/name: opentelemetry-demo-frontendproxy
+      annotations:
+        # here are the annotations for OpenFeature Operator
+        openfeature.dev/enabled: "true"
+        openfeature.dev/featureflagsource: "otel-demo"
     spec:
       serviceAccountName: opentelemetry-demo
       containers:
@@ -656,10 +667,6 @@ spec:
             value: cumulative
           - name: ENVOY_PORT
             value: "8080"
-          - name: FLAGD_HOST
-            value: 'opentelemetry-demo-flagd'
-          - name: FLAGD_PORT
-            value: "8013"
           - name: FRONTEND_HOST
             value: 'opentelemetry-demo-frontend'
           - name: FRONTEND_PORT
@@ -673,7 +680,7 @@ spec:
           - name: IMAGE_PROVIDER_PORT
             value: "8081"
           - name: JAEGER_SERVICE_HOST
-            value: 'opentelemetry-demo-jaeger-query'
+            value: 'tempo-simplest-query-frontend'
           - name: JAEGER_SERVICE_PORT
             value: "16686"
           - name: LOCUST_WEB_HOST
@@ -688,6 +695,10 @@ spec:
             value: "4318"
           - name: OTEL_RESOURCE_ATTRIBUTES
             value: service.name=$(OTEL_SERVICE_NAME),service.version={{ .Chart.AppVersion }}
+          - name: FLAGD_HOST
+            value: '0.0.0.0'
+          - name: FLAGD_PORT
+            value: "8013"
           resources:
             limits:
               memory: 500Mi
@@ -1099,7 +1110,7 @@ spec:
           - name: OTEL_RESOURCE_ATTRIBUTES
             value: service.name=$(OTEL_SERVICE_NAME),service.namespace=opentelemetry-demo
           - name: FLAGD_HOST
-            value: "0.0.0.0"
+            value: '0.0.0.0'
           resources:
             limits:
               memory: 500Mi
