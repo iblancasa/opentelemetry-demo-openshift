@@ -3,7 +3,6 @@ kind: Deployment
 metadata:
   name: opentelemetry-demo-accountingservice
   labels:
-    
     opentelemetry.io/name: opentelemetry-demo-accountingservice
     app.kubernetes.io/instance: opentelemetry-demo
     app.kubernetes.io/component: accountingservice
@@ -25,7 +24,8 @@ spec:
       serviceAccountName: opentelemetry-demo
       containers:
         - name: accountingservice
-          image: 'ghcr.io/open-telemetry/demo:{{ .Chart.AppVersion }}-accountingservice'
+          # Workaround for https://github.com/open-telemetry/opentelemetry-demo/pull/1692
+          image: 'quay.io/iblancas/demo:1.11.1-accountingservice'
           imagePullPolicy: IfNotPresent
           env:
           - name: OTEL_SERVICE_NAME
@@ -45,7 +45,7 @@ spec:
             value: service.name=$(OTEL_SERVICE_NAME),service.namespace=opentelemetry-demo
           resources:
             limits:
-              memory: 20Mi
+              memory: 80Mi
           securityContext:
             runAsGroup: 1001
             runAsNonRoot: true
@@ -188,10 +188,10 @@ spec:
             value: cumulative
           - name: CART_SERVICE_PORT
             value: "8080"
+          - name: VALKEY_ADDR
+            value: 'opentelemetry-demo-valkey:6379'
           - name: ASPNETCORE_URLS
             value: http://*:$(CART_SERVICE_PORT)
-          - name: REDIS_ADDR
-            value: 'opentelemetry-demo-redis:6379'
           - name: OTEL_EXPORTER_OTLP_ENDPOINT
             value: http://$(OTEL_COLLECTOR_NAME):4317
           - name: OTEL_RESOURCE_ATTRIBUTES
@@ -215,10 +215,10 @@ spec:
         - command:
           - sh
           - -c
-          - until nc -z -v -w30 opentelemetry-demo-redis 6379; do echo waiting
-            for redis; sleep 2; done;
+          - until nc -z -v -w30 opentelemetry-demo-valkey 6379; do echo waiting
+            for valkey; sleep 2; done;
+          name: wait-for-valkey
           image: busybox:1.36
-          name: wait-for-redis
           securityContext:
             runAsGroup: 1001
             runAsNonRoot: true
@@ -499,7 +499,7 @@ spec:
             value: service.name=$(OTEL_SERVICE_NAME),service.namespace=opentelemetry-demo
           resources:
             limits:
-              memory: 200Mi
+              memory: 400Mi
           securityContext:
             runAsGroup: 1001
             runAsNonRoot: true
@@ -651,35 +651,43 @@ spec:
                 apiVersion: v1
                 fieldPath: metadata.labels['app.kubernetes.io/component']
           - name: OTEL_COLLECTOR_NAME
-            value: 'opentelemetry-demo-collector'
+            value: 'opentelemetry-demo-otelcol'
           - name: OTEL_EXPORTER_OTLP_METRICS_TEMPORALITY_PREFERENCE
             value: cumulative
           - name: ENVOY_PORT
             value: "8080"
-          - name: FRONTEND_PORT
-            value: "8080"
+          - name: FLAGD_HOST
+            value: 'opentelemetry-demo-flagd'
+          - name: FLAGD_PORT
+            value: "8013"
           - name: FRONTEND_HOST
             value: 'opentelemetry-demo-frontend'
-          - name: LOCUST_WEB_PORT
-            value: "8089"
-          - name: LOCUST_WEB_HOST
-            value: 'opentelemetry-demo-loadgenerator'
-          - name: GRAFANA_SERVICE_PORT
-            value: '8080' # if not defined, the app crashes
+          - name: FRONTEND_PORT
+            value: "8080"
           - name: GRAFANA_SERVICE_HOST
-            value: 'none' # if not defined, the app crashes
-          - name: JAEGER_SERVICE_PORT
-            value: "16686"
+            value: 'opentelemetry-demo-grafana'
+          - name: GRAFANA_SERVICE_PORT
+            value: "80"
+          - name: IMAGE_PROVIDER_HOST
+            value: 'opentelemetry-demo-imageprovider'
+          - name: IMAGE_PROVIDER_PORT
+            value: "8081"
           - name: JAEGER_SERVICE_HOST
             value: 'opentelemetry-demo-jaeger-query'
+          - name: JAEGER_SERVICE_PORT
+            value: "16686"
+          - name: LOCUST_WEB_HOST
+            value: 'opentelemetry-demo-loadgenerator'
+          - name: LOCUST_WEB_PORT
+            value: "8089"
+          - name: OTEL_COLLECTOR_HOST
+            value: $(OTEL_COLLECTOR_NAME)
           - name: OTEL_COLLECTOR_PORT_GRPC
             value: "4317"
           - name: OTEL_COLLECTOR_PORT_HTTP
             value: "4318"
-          - name: OTEL_COLLECTOR_HOST
-            value: $(OTEL_COLLECTOR_NAME)
           - name: OTEL_RESOURCE_ATTRIBUTES
-            value: service.name=$(OTEL_SERVICE_NAME),service.namespace=opentelemetry-demo
+            value: service.name=$(OTEL_SERVICE_NAME),service.version={{ .Chart.AppVersion }}
           resources:
             limits:
               memory: 500Mi
@@ -742,12 +750,12 @@ spec:
           - name: OTEL_EXPORTER_OTLP_ENDPOINT
             value: http://$(OTEL_COLLECTOR_NAME):4318
           - name: KAFKA_HEAP_OPTS
-            value: -Xmx200M -Xms200M
+            value: -Xms512m -Xmx1g
           - name: OTEL_RESOURCE_ATTRIBUTES
             value: service.name=$(OTEL_SERVICE_NAME),service.namespace=opentelemetry-demo
           resources:
             limits:
-              memory: 500Mi
+              memory: 1000Mi
           securityContext:
             runAsGroup: 1000
             runAsNonRoot: true
@@ -1106,38 +1114,43 @@ spec:
             seccompProfile:
               type: RuntimeDefault
 ---
+# Source: opentelemetry-demo/templates/component.yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: opentelemetry-demo-redis
+  name: opentelemetry-demo-valkey
   labels:
-    opentelemetry.io/name: opentelemetry-demo-redis
+    
+    opentelemetry.io/name: opentelemetry-demo-valkey
     app.kubernetes.io/instance: opentelemetry-demo
-    app.kubernetes.io/component: redis
-    app.kubernetes.io/name: opentelemetry-demo-redis
+    app.kubernetes.io/component: valkey
+    app.kubernetes.io/name: opentelemetry-demo-valkey
+    app.kubernetes.io/version: "1.11.0"
     app.kubernetes.io/part-of: opentelemetry-demo
 spec:
   replicas: 1
   selector:
     matchLabels:
-      opentelemetry.io/name: opentelemetry-demo-redis
+      
+      opentelemetry.io/name: opentelemetry-demo-valkey
   template:
     metadata:
       labels:
-        opentelemetry.io/name: opentelemetry-demo-redis
+        
+        opentelemetry.io/name: opentelemetry-demo-valkey
         app.kubernetes.io/instance: opentelemetry-demo
-        app.kubernetes.io/component: redis
-        app.kubernetes.io/name: opentelemetry-demo-redis
+        app.kubernetes.io/component: valkey
+        app.kubernetes.io/name: opentelemetry-demo-valkey
     spec:
       serviceAccountName: opentelemetry-demo
       containers:
-        - name: redis
-          image: 'redis:7.2-alpine'
+        - name: valkey
+          image: 'valkey/valkey:7.2-alpine'
           imagePullPolicy: IfNotPresent
           ports:
           
           - containerPort: 6379
-            name: redis
+            name: valkey
           env:
           - name: OTEL_SERVICE_NAME
             valueFrom:
@@ -1145,24 +1158,26 @@ spec:
                 apiVersion: v1
                 fieldPath: metadata.labels['app.kubernetes.io/component']
           - name: OTEL_COLLECTOR_NAME
-            value: 'opentelemetry-demo-collector'
+            value: 'opentelemetry-demo-otelcol'
           - name: OTEL_EXPORTER_OTLP_METRICS_TEMPORALITY_PREFERENCE
             value: cumulative
           - name: OTEL_RESOURCE_ATTRIBUTES
-            value: service.name=$(OTEL_SERVICE_NAME),service.namespace=opentelemetry-demo
+            value: service.name=$(OTEL_SERVICE_NAME),service.namespace=opentelemetry-demo,service.version=1.11.0
           resources:
             limits:
               memory: 20Mi
           securityContext:
             runAsGroup: 1000
             runAsNonRoot: true
-            runAsUser: 1000
+            runAsUser: 999
             allowPrivilegeEscalation: false
             capabilities:
               drop:
                 - ALL
             seccompProfile:
               type: RuntimeDefault
+          volumeMounts:
+      volumes:
 ---
 apiVersion: apps/v1
 kind: Deployment

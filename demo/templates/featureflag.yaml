@@ -50,6 +50,12 @@ spec:
             ]
           ]
         }
+      kafkaQueueProblems:
+        state: "ENABLED"
+        variants:
+          "on": '100'
+          "off": '0'
+        defaultVariant: "off"
       cartServiceFailure:
         state: "ENABLED"
         variants:
@@ -74,3 +80,10 @@ spec:
           "on": true
           "off": false
         defaultVariant: "off"
+      imageSlowLoad:
+        state: "ENABLED"
+        variants:
+          "10sec": '10000'
+          "5sec": '5000'
+          "off": '0'
+        defaultVariant: "5sec"

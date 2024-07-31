@@ -12,14 +12,14 @@ Before running the demo, you will need some elements:
 ## How to install `cert-manager`
 `cert-manager`:
 ```sh
-$ kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.14.3/cert-manager.yaml &&
+$ kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.14.3/cert-manager.yaml
 $ kubectl wait --for=condition=Available=True deploy --all -n 'cert-manager'
 ```
 
 ## How to install `open-feature-operator`:
 ```sh
-$ helm repo add openfeature https://open-feature.github.io/open-feature-operator/ &&
-$ helm repo update &&
+$ helm repo add openfeature https://open-feature.github.io/open-feature-operator/
+$ helm repo update
 $ helm upgrade --install openfeature openfeature/open-feature-operator
 ```
 
@@ -76,7 +76,6 @@ opentelemetry-demo-paymentservice          1/1     1            1            1m
 opentelemetry-demo-productcatalogservice   1/1     1            1            1m
 opentelemetry-demo-quoteservice            1/1     1            1            1m
 opentelemetry-demo-recommendationservice   1/1     1            1            1m
-opentelemetry-demo-redis                   1/1     1            1            1m
 opentelemetry-demo-shippingservice         1/1     1            1            1m
 tempo-simplest-compactor                   1/1     1            1            1m
 tempo-simplest-distributor                 1/1     1            1            1m
